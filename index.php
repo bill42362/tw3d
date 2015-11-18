@@ -5,8 +5,8 @@
 <head>
 	<meta charset="utf-8">
 	<meta property="og:url" content="http://bill42362.net">
-	<meta property="og:title" content="Gis3d">
-	<meta property="og:description" content="Use WebGL to display GIS data.">
+	<meta property="og:title" content="TW3d">
+	<meta property="og:description" content="Use WebGL to display Taiwan GIS data.">
 	<meta name="firewall" content="法輪功 法輪大法好 六四天安門">
 	<title>Gis3d</title>
 	<link rel="stylesheet" type="text/css" href="css/normalize.css"></link>
@@ -18,11 +18,7 @@
 	<![endif]-->
 </head>
 <body>
-<header></header>
-<nav></nav>
-<div id="trunk">
+<span id="trunk">
 </div>
-<div id="log_div"></div>
-<footer></footer>
 </body>
 </html>

@@ -47,19 +47,16 @@
 	@-o-keyframes ~'@{name}' { @rules(); }
 	@keyframes ~'@{name}' { @rules(); }
 }
-body { background-color: @background; }
-div#trunk {
+span#trunk {
 	position: relative;
-	width: 100%;
-	background-color: @foreground;
+	display: inline-block;
+	width: 40em;
+	height: 30em;
 }
 div.gis3d {
 	background-color: @background;
 	width: 100%;
 	font-family: monospace;
-	img.fiximg {
-		width: 100%;
-	}
 	canvas {
 		position: absolute;
 		top: 0%; left: 0%;
@@ -67,94 +64,27 @@ div.gis3d {
 		height: 100%;
 		color: @foreground;
 	}
+	canvas.canvas3d { background-color: @background; }
 	div.ui {
 		position: absolute;
 		top: 0%; left: 0%;
 		width: 100%;
 		height: 100%;
-		nav.wraps {
-			width: 15%;
-			background-color: @currentLine;
-			color: @foreground;
-			.transparent(0.4);
-			&:hover { .transparent(0.8); }
-			h2.title {
-				margin: 0px;
-				padding: 1px;
-				background-color: lighten(@currentLine, 10%);
-				color: lighten(@foreground, 10%);
-			}
-			ul.wraplist {
-				margin: 0px;
-				padding: 1px;
-				li.wrap {
-					padding: 1px;
-					cursor: pointer;
-					overflow-x: hidden;
-					&:hover {
-						overflow-x: visible;
-						background-color: @selection;
-					}
-					h3.title {
-						margin: 0px;
-					}
-					div.description {
-					}
-					div.id {
-						display: none;
-					}
-					div.formula {
-						display: none;
-					}
-				}
-			}
-		}
 		div.dataviewer {
-			position: fixed;
+			position: absolute;
 			bottom: 0%;
 			right: 0%;
-			width: 15%;
+			width: 7em;
 			background-color: @currentLine;
 			color: @foreground;
 			.transparent(0.4);
 			&:hover { .transparent(0.8); }
-		}
-		div.console {
-			position: fixed;
-			bottom: 0%;
-			width: 100%;
-			color: @foreground;
-			pre.history {
-				margin: 0;
-				max-height: 100em;
-				&.show {
-					color: @foreground;
-					max-height: 100em;
-				}
-				&.transition {
-					.transition(all);
-					color: @selection;
-					max-height: 0em;
-				}
-				&.hidden {
-					display: none;
-				}
-			}
-			div.wrapmaker {
-				&.hidden { display: none; }
-				div.wrapmakerlog {
-					div.wrapmakererror {
-						color: @red;
-					}
-				}
-			}
-			div.input {
-			}
 		}
 		div.fps {
 			position: absolute;
 			top: 0%; right: 0%;
 			color: @foreground;
+			font-size: 1em;
 		}
 	}
 	// For Safari support.

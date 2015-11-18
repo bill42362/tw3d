@@ -19,17 +19,11 @@ if(undefined === Gis3d) { var Gis3d = function() {}; };
 Gis3d.object = function() {
 	this.model = new Gis3d.G3dModel();
 	Gis3d.eventCenter.registListener(
-		this.model, 'wrapsgot', this.doWrapsGot, this
-	);
-	Gis3d.eventCenter.registListener(
 		this.model, 'selectionchanged', this.doSelectionChanged, this
 	);
 
 	this.frame = document.createElement('div');
 	this.frame.className = 'gis3d';
-	this.fixImg = document.createElement('img');
-	this.fixImg.className = 'fiximg';
-	this.fixImg.src = Gis3d.ASPECT_16_9;
 	this.canvas2d = document.createElement('canvas');
 	this.canvas2d.className = 'canvas2d';
 	this.canvas3d = document.createElement('canvas');
@@ -38,7 +32,6 @@ Gis3d.object = function() {
 	this.ui = document.createElement('div');
 	this.ui.className = 'ui';
 	this.ui.holder = this;
-	this.frame.appendChild(this.fixImg);
 	this.frame.appendChild(this.canvas3d);
 	this.frame.appendChild(this.canvas2d);
 	this.frame.appendChild(this.ui);
@@ -49,31 +42,8 @@ Gis3d.object = function() {
 	this.dataViewer = new Gis3d.G3dDataViewer();
 	this.dataViewer.bindTo(this.ui);
 
-	this.wraps = new Gis3d.G3dWraps();
-	this.wraps.bindTo(this.ui);
-	Gis3d.eventCenter.registListener(
-		this.wraps, 'wrapselected', this.doWrapSelected, this
-	);
-
-	this.console = document.createElement('div');
-	this.console.className = 'console';
-	this.ui.appendChild(this.console);
-
-	this.history = Gis3d.history;
-	this.history.bindTo(this.console);
-
-	this.wrapMaker = new Gis3d.G3dWrapMaker();
-	this.wrapMaker.bindTo(this.console);
-
-	this.commandListener = new Gis3d.CommandListener();
-	this.commandListener.holder = this;
-	this.commandListener.bindTo(this.console);
-
 	this.keyboardTracker = new Gis3d.ElementPlugin.KeyboardTracker();
 	this.keyboardTracker.bindListeners(document);
-	Gis3d.eventCenter.registListener(
-		this.keyboardTracker, 'keydown', this.doKeydown, this
-	);
 
 	this.mouseTracker = new Gis3d.ElementPlugin.MouseTracker();
 	this.mouseTracker.bindListeners(this.ui);
@@ -92,10 +62,6 @@ Gis3d.object = function() {
 Gis3d.eventCenter = new Gis3d.EventCenter();
 Gis3d.history = new Gis3d.CommandHistory();
 Gis3d.baseMatrix = new LaMatrix();
-Gis3d.ASPECT_16_9 = 'data:image/png;base64,'
-	+ 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAJCAYAAAA7'
-	+ 'KqwyAAAAGklEQVQoFWP8//8/AyWAiRLNIL2jBgyL'
-	+ 'MAAA5V8DD8x1oKIAAAAASUVORK5CYII%3D';
 
 Gis3d.unitTest = function() {
 	var gis3d = new Gis3d();
@@ -106,7 +72,6 @@ Gis3d.unitTest = function() {
 }
 
 Gis3d.prototype.ajaxRequestMaker = new Gis3d.XMLReq();
-Gis3d.prototype.visableVillage = {updateTime: Date.now(), villages: undefined};
 Gis3d.prototype.data2D = {
 	center: {x: 120.59, y: 23.58},
 	max: {x: 1.92, y: 3.4},
@@ -132,11 +97,6 @@ Gis3d.prototype.bindTo = function(elem) {
 	return this;
 }
 
-Gis3d.prototype.reset = function() {
-	this.model.reset();
-	return this;
-}
-
 Gis3d.prototype.addRegion = function(input) {
 	this.model.addRegion(input);
 	return this;
@@ -154,11 +114,6 @@ Gis3d.prototype.onlyRegion = function(input) {
 
 Gis3d.prototype.exceptRegion = function(input) {
 	this.model.exceptRegion(input);
-	return this;
-}
-
-Gis3d.prototype.setFormula = function(formula) {
-	this.model.setFormula(formula);
 	return this;
 }
 
@@ -429,42 +384,8 @@ Gis3d.prototype.getPointed = function(objs, point) {
 	return pointeds[0];
 }
 
-Gis3d.prototype.doWrapsGot = function(e) {
-	this.wraps.setWraps(e.data);
-	return this;
-}
-
 Gis3d.prototype.doSelectionChanged = function(e) {
 	this.dataViewer.setDatas(e.data);
-	return this;
-}
-
-Gis3d.prototype.doWrapSelected = function(e) {
-	this.model.setFormula(e.data);
-	return this;
-}
-
-Gis3d.prototype.makeWrap = function() {
-	this.wrapMaker.startListen();
-	return this;
-}
-
-Gis3d.prototype.doKeydown = function(e) {
-	var key_table = e.data;
-	if(-1 != key_table.indexOf(':')) {
-		this.commandListener.startListen();
-	}
-	if(1 === key_table.pressedKeys.length) {
-		switch(key_table.pressedKeys[0].key) {
-			case 'Enter':
-				this.commandListener.sendCommand();
-				break;
-			case 'Escape':
-				this.commandListener.cancelListenCommand();
-				break;
-			default: break;
-		}
-	}
 	return this;
 }
 
