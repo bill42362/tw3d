@@ -29,6 +29,7 @@ Gis3d.ElementPlugin.MouseTracker = function() {
 	};
 	return this;
 }
+Gis3d.ElementPlugin.MouseTracker.prototype.scrollingEnabled = true;
 
 Gis3d.ElementPlugin.KeyboardTracker.prototype.bindListeners = function(target) {
 	this.target = target;
@@ -177,6 +178,7 @@ Gis3d.ElementPlugin.MouseTracker.prototype.replyMouseWheel = function(e) {
 	}
 	Gis3d.eventCenter.castEvent(self, 'mousewheel', self.state);
 	self.pushPrevState();
+	if(!self.scrollingEnabled) { e.preventDefault(); }
 	return self;
 }
 

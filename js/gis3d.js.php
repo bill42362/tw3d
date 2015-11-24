@@ -46,6 +46,7 @@ Gis3d.object = function() {
 	this.keyboardTracker.bindListeners(document);
 
 	this.mouseTracker = new Gis3d.ElementPlugin.MouseTracker();
+	this.mouseTracker.scrollingEnabled = false;
 	this.mouseTracker.bindListeners(this.ui);
 	Gis3d.eventCenter.registListener(
 		this.mouseTracker, 'mousemove', this.doMouseMove, this

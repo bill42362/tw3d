@@ -7,6 +7,7 @@ var runOnreadyFunctions = function(e) {
 		var gis3d = new Gis3d.object();
 		gis3d.bindTo(document.getElementById('trunk'));
 		gis3d.showFrame();
+		window.gis = gis3d;
 	}
 	return this;
 }
