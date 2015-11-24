@@ -1,11 +1,16 @@
 # tw3d
-Usage:
-1. Include js/gis3d.js
+## Usage:
+### 1. Include js/gis3d.js
+	```
 	<script src="js/gis3d.js" type="text/javascript"></script>
-2. Include css/gis3d.less
+	```
+### 2. Include css/gis3d.less
+	```
 	<link rel="stylesheet/less" type="text/css" href="css/gis3d.less"></link>
 	<script src="js/less.js" type="text/javascript"></script>
-3. Use library as follow:
+	```
+### 3. Use library as follow:
+	```
 	var runOnreadyFunctions = function(e) {
 		if('complete' == e.target.readyState) {
 			var gis3d = new Gis3d.object();
@@ -23,3 +28,4 @@ Usage:
 		return this;
 	}
 	document.addEventListener("readystatechange", runOnreadyFunctions, false);
+	```
