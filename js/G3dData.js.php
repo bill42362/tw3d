@@ -21,9 +21,9 @@ Gis3d.G3dData = function() {
 		{op: this.minusData, pattern: /^\s*(.*)\s+\-\s+(.*)\s*$/i, nSubs: 2}
 	];
 
-	this.usingDataIds = ['7273834f-6f3c-4620-8853-d6cf770d1a88'];
+	this.usingDataIds = [''];
 	this.datas = [];
-	this.dataFormula = ' sqrt(  normalize( 7273834f-6f3c-4620-8853-d6cf770d1a88  )  )',
+	this.dataFormula = '',
 	this.data = {county: [], town: [], legirea: [], village: []};
 
 	this.lastRegionDataTimes = [];

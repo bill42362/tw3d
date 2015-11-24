@@ -80,8 +80,25 @@ Gis3d.G3dRegion.prototype.setRegionSelectedById = function(id) {
 
 Gis3d.G3dRegion.prototype.applyRegionDatas = function(datas) {
 	this.modelDatas = datas;
+	this.setAllRegionHeight(0.0001);
 	for(var i = 0, len = datas.length; i < len; ++i) {
 		this.setRegionHeightById(datas[i].id, datas[i].data);
+	}
+	return this;
+}
+
+Gis3d.G3dRegion.prototype.setAllRegionHeight = function(_height) {
+	var height = Number(_height);
+	if(isNaN(height)) {
+		console.error('Gis3d.G3dRegion.setAllRegionHeight(): Wrong input.');
+		return this;
+	}
+	var models = this.models;
+	var centroids = this.getCentroids();
+	var model = undefined;
+	for(var i = 0; i < centroids.length; ++i) {
+		model = models[centroids[i].id];
+		if(undefined != model) { model.targetHeight = height; }
 	}
 	return this;
 }
@@ -118,6 +135,19 @@ Gis3d.G3dRegion.prototype.setRegionHeightById = function(id, _height) {
 		models[id].targetHeight = height;
 	}
 	return this;
+}
+
+Gis3d.G3dRegion.prototype.getCentroidById = function(id) {
+	if (!(typeof id === 'string') && !(id instanceof String)) {
+		console.error('Gis3d.G3dRegion.getCentroidById(): Wrong input.');
+		return false;
+	}
+	var centroids = this.getCentroids();
+	var centroid = undefined;
+	for(var i = 0; i < centroids.length; ++i) {
+		if(id === centroids[i].id) { centroid = centroids[i]; }
+	}
+	return centroid;
 }
 
 Gis3d.G3dRegion.prototype.getCentroids = function() {

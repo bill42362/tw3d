@@ -23,9 +23,9 @@ Gis3d.G3dDataViewer.prototype.bindTo = function(elem) {
 }
 
 Gis3d.G3dDataViewer.prototype.setDatas = function(datas) {
-	this.county.textContent = datas.county.name + ' ' + datas.county.data.toFixed(3);
-	this.regionL2.textContent = datas.regionL2.name + ' ' + datas.regionL2.data.toFixed(3);
-	this.village.textContent = datas.village.name + ' ' + datas.village.data.toFixed(3);
+	this.county.textContent = datas.county.name + ' ' + (datas.county.data || 0).toFixed(3);
+	this.regionL2.textContent = datas.regionL2.name + ' ' + (datas.regionL2.data || 0).toFixed(3);
+	this.village.textContent = datas.village.name + ' ' + (datas.village.data || 0 ).toFixed(3);
 	return this;
 }
 

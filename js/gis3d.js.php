@@ -7,13 +7,9 @@ include_once('ElementPlugin.js.php');
 include_once('ShaderProgram.js.php');
 include_once('Shape.js.php');
 include_once('G3dModel.js.php');
-include_once('G3dWraps.js.php');
-include_once('CommandHistory.js.php');
-include_once('CommandListener.js.php');
 include_once('G3dFPSComputer.js.php');
 include_once('G3dFPSViewer.js.php');
 include_once('G3dDataViewer.js.php');
-include_once('G3dWrapMaker.js.php');
 ?>
 if(undefined === Gis3d) { var Gis3d = function() {}; };
 Gis3d.object = function() {
@@ -61,7 +57,6 @@ Gis3d.object = function() {
 }; Gis3d.object.prototype = Gis3d.prototype;
 
 Gis3d.eventCenter = new Gis3d.EventCenter();
-Gis3d.history = new Gis3d.CommandHistory();
 Gis3d.baseMatrix = new LaMatrix();
 
 Gis3d.unitTest = function() {
@@ -95,6 +90,15 @@ Gis3d.prototype.xzAxisMesh = new Gis3d.Shape.XYAxisMesh();
 
 Gis3d.prototype.bindTo = function(elem) {
 	elem.appendChild(this.frame);
+	return this;
+}
+
+Gis3d.prototype.setDataByPath = function(path, value) {
+	if(!Array.isArray(path) || (0 === path.length) || !Number(value)) {
+		console.error('Gis3d.setDataByPath(): Wrong input.');
+		return null;
+	}
+	this.model.setDataByPath(path, value);
 	return this;
 }
 

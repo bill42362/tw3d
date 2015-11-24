@@ -12,6 +12,7 @@
 	<link rel="stylesheet" type="text/css" href="css/normalize.css"></link>
 	<link rel="stylesheet/less" type="text/css" href="css/gis3d.less.php"></link>
 	<script src="js/less.js" type="text/javascript"></script>
+	<script src="js/gis3d.js" type="text/javascript"></script>
 	<script src="js/gis3ddemo.js.php" type="text/javascript"></script>
 	<!--[if IE]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>

@@ -25,6 +25,7 @@ Gis3d.G3dModel = function() {
 	this.village = new Gis3d.G3dRegion(this.dbFactory);
 	this.village.setRegionName('village');
 	this.village.setFineness(32);
+	this.regionL2 = undefined;
 
 	this.countyCentroids = [];
 	this.townCentroids = [];
@@ -47,6 +48,7 @@ Gis3d.G3dModel = function() {
 	this.wrapServer = new Gis3d.G3dWrapServer()
 	this.wraps = [];
 
+	this.stackedDatas = [];
 	this.unitedModel = null;
 	this.normalizeData = true;
 	this.logData = false;
@@ -57,15 +59,25 @@ Gis3d.G3dModel = function() {
 	return this;
 }
 Gis3d.G3dModel.unitTest = function() {
-	var gicidb = new Gis3d.G3dModel();
+	var gicidb = gis.model || new Gis3d.G3dModel();
 	window.gicidb = gicidb;
+	var sampleData = [
+		{path: ['臺北市'], value: 0.2},
+		{path: ['屏東縣', '屏東市', '新興里'], value: 0.5},
+		{path: ['新北市', '板橋區'], value: 0.8}
+	];
+	for(var i = 0; i < sampleData.length; ++i) {
+		gicidb.setDataByPath(sampleData[i].path, sampleData[i].value);
+	}
+	console.table(sampleData);
+	console.table(gicidb.data.data);
 	return true;
 }
 
 Gis3d.G3dModel.prototype.SHUFFLE_TIME = 0; // Set to 0 for cancel shuffling.
 Gis3d.G3dModel.prototype.UNITED_MODEL_LIFETIME = Number(70);
 Gis3d.G3dModel.prototype.WRAPS_LIFETIME = Number(60000);
-Gis3d.G3dModel.prototype.usingWrapId = '7273834f-6f3c-4620-8853-d6cf770d1a88';
+Gis3d.G3dModel.prototype.usingWrapId = '';
 Gis3d.G3dModel.prototype.regionMode = 'town';
 
 Gis3d.G3dModel.prototype.reset = function() {
@@ -145,6 +157,81 @@ Gis3d.G3dModel.prototype.setRegionsSelectedByPoint = function(point) {
 	return this;
 }
 
+Gis3d.G3dModel.prototype.applyStackedDatas = function() {
+	var datas = this.stackedDatas.concat();
+	this.stackedDatas.length = 0;
+	for(var i = 0; i < datas.length; ++i) {
+		console.log("Gis3d.G3dModel.applyStackedDatas() length:", datas.length);
+		this.setDataByPath(datas[i].path, datas[i].value);
+	}
+	return this.stackedDatas;
+}
+
+Gis3d.G3dModel.prototype.setDataByPath = function(path, value) {
+	if(!Array.isArray(path) || (0 === path.length) || !Number(value)) {
+		console.error('Gis3d.G3dModel.setDataByPath(): Wrong input.');
+		return null;
+	}
+	this.reqCentroids();
+	var data = this.data;
+	var dataColumn = undefined;
+	var id = undefined;
+	switch(path.length) {
+		case 1:
+			var centroids = this.countyCentroids;
+			for(var i = 0; i < centroids.length; ++i) {
+				if(path[0] == centroids[i].name) { id = centroids[i].id; }
+			}
+			if(undefined != id) { dataColumn = data.data.county; }
+			break;
+		case 2:
+			var centroids = this.townCentroids;
+			for(var i = 0; i < centroids.length; ++i) {
+				if(
+					(path[0] === centroids[i].county_name)
+					&& (path[1] === centroids[i].name)
+				) {
+					id = centroids[i].id;
+				}
+			}
+			if(undefined != id) { dataColumn = data.data.town; }
+			if(undefined === id) {
+				var centroids = this.legireaCentroids;
+				for(var i = 0; i < centroids.length; ++i) {
+					if(
+						(path[0] === centroids[i].county_name)
+						&& (path[1] === centroids[i].name)
+					) {
+						id = centroids[i].id;
+					}
+				}
+				if(undefined != id) { dataColumn = data.data.legirea; }
+			}
+			break;
+		case 3:
+			var centroids = this.villageCentroids;
+			for(var i = 0; i < centroids.length; ++i) {
+				if(
+					(path[0] == centroids[i].county_name)
+					&& (
+						(path[1] == centroids[i].town_name)
+						|| (path[1] === centroids[i].legirea_name)
+					)
+					&& (path[2] == centroids[i].name)
+				) {
+					id = centroids[i].id;
+				}
+			}
+			if(undefined != id) { dataColumn = data.data.village; }
+			break;
+		default: break;
+	}
+	if(undefined != id) { dataColumn.push({id: id, data: value}); }
+	else { this.stackedDatas.push({path: path, value: value}); }
+	return data;
+}
+
+
 Gis3d.G3dModel.prototype.setFormula = function(formula) {
 	if(!(typeof formula === 'string') && !(formula instanceof String)) {
 		console.error('Gis3d.G3dModel.setFormula(): Wrong input.');
@@ -166,8 +253,10 @@ Gis3d.G3dModel.prototype.setRegionMode = function(mode) {
 	this.regionMode = mode;
 	if('legirea' === this.regionMode) {
 		this.regionL2Centroids = this.legireaCentroids;
+		this.regionL2 = this.legirea;
 	} else {
 		this.regionL2Centroids = this.townCentroids;
+		this.regionL2 = this.town;
 	}
 	this.treedRegionL2Centroids = [];
 	this.treedRegionL3Centroids = [];
@@ -433,6 +522,8 @@ Gis3d.G3dModel.prototype.applyRegionData = function() {
 	var town = data.town;
 	var legirea = data.legirea;
 	var village = data.village;
+
+	this.applyStackedDatas();
 
 	this.filterDatas(county);
 	this.filterDatas(town);
