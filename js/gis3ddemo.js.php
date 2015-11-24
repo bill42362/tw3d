@@ -6,7 +6,6 @@ var runOnreadyFunctions = function(e) {
 		var gis3d = new Gis3d.object();
 		gis3d.bindTo(document.getElementById('trunk'));
 		gis3d.showFrame();
-		window.gis = gis3d;
 		var sampleData = [
 			{path: ['臺北市'], value: 0.2},
 			{path: ['屏東縣', '屏東市', '新興里'], value: 0.5},
